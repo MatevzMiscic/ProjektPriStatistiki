@@ -1,4 +1,3 @@
-import random
 import math
 import pandas as pd
 import os.path
@@ -47,13 +46,15 @@ print(start)
 print(bins)
 
 fig1, ax1 = plt.subplots()
-ax1.set_title("Prvi histogram")
+ax1.set_title("Histogram z log-normalno gostoto")
 ax1.hist(data.X, bins=bins)
 
 # Če so podatki iz datoteke hobotnice porazdeljeni log-normalno, je Y porazdeljen normalo
 # Izračunajmo pričakovano vrednost in varianco Y
 mu1 = data.Y.mean()
 sigma1 = data.Y.std(ddof=0)
+print("mi = ", mu1)
+print("sigma = ", sigma1)
 
 x = np.linspace(0, 200, 1000)
 area = width * n
@@ -93,9 +94,9 @@ print(start)
 print(bins)
 
 fig2, ax2 = plt.subplots()
-ax2.set_title("Drugi histogram")
+ax2.set_title("Histogram z normalno gostoto")
 ax2.hist(data.X, bins=bins)
-plt.xscale('log')
+plt.xscale("log")
 
 mu2 = data.Z.mean()
 sigma2 = data.Z.std(ddof=0)
@@ -129,7 +130,8 @@ def qqplot2(data, ppf):
     Y = data
     return (X, Y)
 
-fig, ax = plt.subplots()
+fig3, ax3 = plt.subplots()
+ax3.set_title("Primerjalni kvantilni grafikon")
 #X, Y = qqplot(data.X.tolist(), lambda x : lognorm.cdf(x, s=sigma1, scale=math.exp(mu1)))
 
 mu0 = data.X.mean()
@@ -138,8 +140,10 @@ sigma0 = data.X.std(ddof=0)
 #X, Y = qqplot2(data.X.tolist(), lambda x : norm.ppf(x, loc=0, scale=1))
 
 X, Y = qqplot2(data.X.tolist(), lambda x : lognorm.ppf(x, s=sigma1, scale=math.exp(mu1)))
-plt.xscale('log')
-plt.yscale('log')
-ax.scatter(X, Y)
+plt.xscale("log")
+plt.yscale("log")
+plt.xlabel("log-normalna porazdelitev")
+plt.ylabel("porazdelitev dolžin hobotnic")
+ax3.scatter(X, Y)
 
-fig.show()
+fig3.show()

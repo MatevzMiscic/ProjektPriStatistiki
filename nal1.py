@@ -2,9 +2,11 @@ import random
 import math
 import pandas as pd
 import os.path
+import matplotlib.pyplot as plt
 
-random.seed(10)
+random.seed(1)
 
+inf = 10**9
 n = 200
 
 path = os.path.join("podatki", "Kibergrad.csv")
@@ -12,7 +14,7 @@ data = pd.read_csv(path)
 
 # naloga a)
 children = data["'OTROK'"]
-sample = children.sample(n, random_state=random.randint(0, 10**6))
+sample = children.sample(n, random_state=random.randint(0, inf))
 
 avg = sample.mean()
 print("Povprečje na vzorcu je", avg, ".")
@@ -29,9 +31,9 @@ def ConfidenceInterval(avg, SE):
     return (avg - 1.96*SE, avg + 1.96*SE)
 
 N = children.size
-SE = StandardError(n, N, avg, sample)
-CI = ConfidenceInterval(avg, SE)
-print("Ocena standardne napake je ", SE, "interval zaupanja pa je ", CI, ".")
+aproxSE = StandardError(n, N, avg, sample)
+CI = ConfidenceInterval(avg, aproxSE)
+print("Ocena standardne napake je ", aproxSE, "interval zaupanja pa je ", CI, ".")
 
 # naloga c)
 popavg = children.mean()
@@ -57,7 +59,7 @@ avgs[0] = avg
 
 count = 0
 for i in range(1, 100):
-    sample = children.sample(n, random_state=random.randint(0, 10**6))
+    sample = children.sample(n, random_state=random.randint(0, inf))
     avg = sample.mean()
     avgs[i] = avg
     SE = StandardError(n, N, avg, sample)
@@ -67,19 +69,58 @@ for i in range(1, 100):
 
 print("Od 100 intervalov zaupanja jih ", count, "vsebje populacijsko povprečje.")
 
+# Kako prikazati intervale zaupanja je dobljeno iz https://stackoverflow.com/questions/59747313/how-to-plot-confidence-interval-in-python
+for i, ci in enumerate(CIs):
+    plt.plot(ci, (i, i), color='blue')
+plt.show()
+
 # naloga e)
 avg = 0
 for val in avgs:
     avg += val
 avg /= 100
+
 SE = 0
 for val in avgs:
     SE += (val - avg) ** 2
 SE /= 100
 SE = math.sqrt(SE)
 
+print("Standardna napaka vzorca je ", aproxSE, ", standardni odklon pa je ", SE)
 
+# naloga f)
 
+n = 800
+count = 0
+for i in range(0, 100):
+    sample = children.sample(n, random_state=random.randint(0, inf))
+    avg = sample.mean()
+    avgs[i] = avg
+    SE = StandardError(n, N, avg, sample)
+    if i == 0:
+        aproxSE = SE
+    CIs[i] = ConfidenceInterval(avg, SE)
+    if CIs[i][0] < popavg and popavg < CIs[i][1]:
+        count += 1
+
+print("Od 100 intervalov zaupanja jih tokrat ", count, "vsebje populacijsko povprečje.")
+
+for i, ci in enumerate(CIs):
+    plt.plot(ci, (i, i), color='blue')
+plt.show()
+
+avg = 0
+for val in avgs:
+    avg += val
+avg /= 100
+
+SE = 0
+for val in avgs:
+    SE += (val - avg) ** 2
+SE /= 100
+SE = math.sqrt(SE)
+
+print("Standardna napaka vzorca je ", aproxSE, ", standardni odklon pa je ", SE)
 
 
 
