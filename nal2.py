@@ -6,6 +6,7 @@ from scipy import stats
 from scipy.stats import lognorm, norm
 import numpy as np
 
+# preberemo podatke iz Hobotnice.csv
 path = os.path.join("podatki", "Hobotnice.csv")
 data = pd.read_csv(path, names=["X"])
 
@@ -20,31 +21,37 @@ data["Z"] = Z
 
 # naloga a)
 
-# Izračunajmo dolžino intervala po modificiranem Freedman-Diaconisovem pravilu
+# Izračunajmo širino razredov po modificiranem Freedman-Diaconisovem pravilu
 quart1 = data.X.quantile(0.25)
 quart3 = data.X.quantile(0.75)
 iqr = quart3 - quart1
 
 width = 2.6 * iqr / (n ** (1/3))
 
-print("N = ", n, ", širina po modificiranem Freedman-Diaconisovem pravilu je", width)
+print("Širina razredov hrbtnih dolžin hobotnic po modificiranem Freedman-Diaconisovem pravilu je", width)
 
 alpha = data.X.min()
 beta = data.X.max()
 binNumber = math.ceil((beta - alpha) / width)
+"""
 shift = (width * binNumber - (beta - alpha)) / 2
 start = alpha - shift
+"""
 
+# Skonstruirajmo meje razredov
 start = 0
 bins = [float(start + i * width) for i in range(0, binNumber + 1)]
 
+"""
 print(alpha)
 print(beta)
 print(binNumber)
 print(shift)
 print(start)
 print(bins)
+"""
 
+# Narisemo histigram
 fig1, ax1 = plt.subplots()
 ax1.set_title("Histogram z log-normalno gostoto")
 ax1.hist(data.X, bins=bins)
@@ -56,6 +63,7 @@ sigma1 = data.Y.std(ddof=0)
 print("mi = ", mu1)
 print("sigma = ", sigma1)
 
+#  Na histogram dorišemo še ustrezno log-normalno gostoto
 x = np.linspace(0, 200, 1000)
 area = width * n
 ax1.plot(x, area * lognorm.pdf(x, s=sigma1, scale=math.exp(mu1)))
@@ -69,15 +77,16 @@ fig1.show()
 
 # naloga b)
 
-# Izračunajmo dolžino intervala po modificiranem Freedman-Diaconisovem pravilu
+# Izračunajmo še širino razredov destiških logaritmov po modificiranem Freedman-Diaconisovem pravilu
 quart1 = data.Z.quantile(0.25)
 quart3 = data.Z.quantile(0.75)
 iqr = quart3 - quart1
 
 width = 2.6 * iqr / (n ** (1/3))
 
-print("Širina po modificiranem Freedman-Diaconisovem pravilu je", width)
+print("Širina razredov desetiških logaritmov hrbtnih dolžin hobotnic po modificiranem Freedman-Diaconisovem pravilu je", width)
 
+# Skonstruirajmo meje razredov
 alpha = data.Z.min()
 beta = data.Z.max()
 binNumber = math.ceil((beta - alpha) / width)
@@ -86,13 +95,16 @@ start = alpha - shift
 
 bins = [float(math.pow(10, start + i * width)) for i in range(0, binNumber + 1)]
 
+"""
 print(alpha)
 print(beta)
 print(binNumber)
 print(shift)
 print(start)
 print(bins)
+"""
 
+# Narišemo histogram na logaritemski lestvici
 fig2, ax2 = plt.subplots()
 ax2.set_title("Histogram z normalno gostoto")
 ax2.hist(data.X, bins=bins)
@@ -101,20 +113,24 @@ plt.xscale("log")
 mu2 = data.Z.mean()
 sigma2 = data.Z.std(ddof=0)
 
+# Dorišemo še ustrezno normalno gostoto
 x = np.linspace(alpha, beta, 1000)
 area = width * n
-print(area)
+#print(area)
 ax2.plot(np.power(10, x), area * norm.pdf(x, loc=mu2, scale=sigma2))
 
 fig2.show()
 
 
+
 # naloga c)
 
+"""
 fig11, ax11 = plt.subplots()
 #plt.xscale('log')
 stats.probplot(data.X, plot=plt)
 #fig11.show()
+"""
 
 def qqplot(data, cdf):
     n = len(data)
@@ -130,6 +146,7 @@ def qqplot2(data, ppf):
     Y = data
     return (X, Y)
 
+# Narišemo primerjalni kvantilni grafikon
 fig3, ax3 = plt.subplots()
 ax3.set_title("Primerjalni kvantilni grafikon")
 #X, Y = qqplot(data.X.tolist(), lambda x : lognorm.cdf(x, s=sigma1, scale=math.exp(mu1)))
