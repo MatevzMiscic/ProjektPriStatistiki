@@ -187,7 +187,7 @@ Pri tej nalogi smo uporabljali program \textbf{hobotnice.py}. Ta program zgeneri
 Pri tej nalogi bomo ugotovili, kako se spreminja teža piščanca s časom in ali dieta vpliva na pridobivanje teže piščanca.
 
 \begin{enumerate}[a)]
-    \item Oceniti moramo, koliko teže piščanec pridobi vsak dan. Za vsakega piščanca privzemimo, da pridobiva težo po statističnem modelu $Y_i = a + b X_i + \epsilon_i$, kjer je $Y_i$ masa piščanca v gramih $X_i$ dni po rojstvu, $\epsilon_i$ pa predstavlja šum. Privzemimo, da za vsak $i$ velja $\E(\epsilon_i) = 0$, $\Var(\epsilon_i) = \sigma^2$ in da so slučajne spremenljivke $\epsilon_i$ nekorelirane. Parameter $a$ predstavlja maso piščanca v gramih, $b$ pa koliko mase piščanec pridobi na dan. Ta dva parametra želimo določiti. Če je $Y$ vektor mas in je 
+    \item Oceniti moramo, koliko teže piščanec pridobi vsak dan. Za vsakega piščanca privzemimo, da pridobiva težo po statističnem modelu $Y_i = a + b X_i + \epsilon_i$, kjer je $Y_i$ masa piščanca v gramih, $X_i$ število dni po rojstvu, $\epsilon_i$ pa predstavlja šum. Privzemimo, da za vsak $i$ velja $\E(\epsilon_i) = 0$, $\Var(\epsilon_i) = \sigma^2$ in da so slučajne spremenljivke $\epsilon_i$ nekorelirane. Parameter $a$ predstavlja maso piščanca v gramih ob rojstvu, $b$ pa koliko mase piščanec pridobi na dan. Ta dva parametra želimo določiti. Če je $Y$ vektor mas in je 
     $$
     X = \left[
         \begin{array}{cc}
@@ -197,7 +197,7 @@ Pri tej nalogi bomo ugotovili, kako se spreminja teža piščanca s časom in al
         \end{array}
     \right]
     $$ 
-    matrika, vemo, da je $X (X^\top X)^{-1} X^\top Y$ ustrezna cenilka za stolpični  vektor $(a, b)$. Za vsakega piščanca lahko na tak način izračunamo parameter $b$ in vzamemo povprečje izračunanih vrednosti za vse piščance. Dobimo oceno, da piščanec v povprečju na dan pridobi približno $ $ gramov.
+    matrika, vemo, da je $(X^\top X)^{-1} X^\top Y$ ustrezna cenilka za stolpični  vektor $(a, b)$. Za vsakega piščanca lahko na tak način izračunamo parameter $b$ in vzamemo povprečje izračunanih vrednosti za vse piščance. Dobimo oceno, da piščanec v povprečju na dan pridobi približno $8.25$ gramov.
 
     \begin{verbatim}
 Piščanec v poprecju pridobi 8.25024410974494 gramov na dan.
@@ -224,7 +224,7 @@ Piščanec v poprecju pridobi 8.25024410974494 gramov na dan.
     $$ 
     je matrika pri kateri prvih $k_1$ vrstic ustreza meritvam piščancev z dieto $1$, naslednjih $k_2 - k_1$ vrstic ustreza meritvam piščancev z dieto $2$ in tako naprej. Parameter $\beta$ je stolpični vektor $\beta = (a, b_1, b_2, b_3, b_4)$, $\epsilon$ pa je seveda šum. Ničelno domneva pravi, da je $b_1 = b_2 = b_3 = b_4$, kar je ekvivalentno temu, da je $\beta \in \Lin\{(1, 0, 0, 0, 0), (0, 1, 1, 1, 1)\}$. Ker ima matrika $X$ linearno neodvisne stolpce, je to ekvivalentno temu, da je $X\beta \in W = \{X^{(1)}, X^{(2)} + X^{(3)} + X^{(4)} + X^{(5)}\}$, kjer $X^{(i)}$ označuje $i$-ti stolpec matrike $X$. Naj bo $V = \im(X)$, $H$ ortogonalni projektor prostora $\R^n$ na podprostor $V$ in $K$ ortogonalni projektor na podprostor $W$. Vpeljimo še oznaki $p = \dim{V}$ in $q = \dim{W}$.
 
-    Ni težko izračunati matrik, ki pripadata projektorjema $H$ in $K$. Če je $A$ matrika, je $B = A (A^\top A)^{-1} A^\top$ projekcija na $\im{A}$. Res, za $v = Au \in \im{A}$ je $Bv = A (A^\top A)^{-1} A^\top Au = Au = v$. Za $v \in (\im{A})^\bot$ pa za vsak vektor $u$ velja $u^\top A^\top v = \inner{Au}{v} = 0$, zato za $u^\top = A (A^\top A)^{-1}$ dobimo $Bv = A (A^\top A)^{-1} A^\top v = 0$. S tem izračunamo matriki $H$ in $K$.
+    Ni težko izračunati matrik, ki pripadata projektorjema $H$ in $K$. Če je $A$ matrika z linearno neodvisnimi stolpci, je $B = A (A^\top A)^{-1} A^\top$ ortogonalna projekcija na $\im{A}$. Res, za $v = Au \in \im{A}$ je $Bv = A (A^\top A)^{-1} A^\top Au = Au = v$. Za $v \in (\im{A})^\bot$ pa za vsak vektor $u$ velja $u^\top A^\top v = \inner{Au}{v} = 0$. Če za $u^\top$ vzemamo vrstice matrike $A (A^\top A)^{-1}$, dobimo $Bv = A (A^\top A)^{-1} A^\top v = 0$. S tem izračunamo matriki $H$ in $K$.
 
     Domnevo $H_0$ lahko preizkusimo s pomočjo preizkusne statistike 
     $$F = \frac{\frac{\|(H - K)Y\|^2}{p - q}}{\frac{\|(I_n - H)Y\|^2}{n - p}}.$$
